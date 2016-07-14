@@ -11,6 +11,9 @@ libcrc.so: $(OBJECTS)
 %.o: %.cc
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
+run_tests:
+	make $@ -C tests
+
 clean:
 	rm -f $(OBJECTS)
 	rm -f libcrc.so

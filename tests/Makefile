@@ -1,6 +1,6 @@
 SOURCES := $(shell find . -name "*.c")
-OBJECTS := $(SOURCES:.c=.o)
 BLOBS := $(shell find bin -name "*.o")
+OBJECTS := $(SOURCES:.c=.o)
 
 CFLAGS = -Wall -O0 -D_GNU_SOURCE
 LDLIBS = -lcrc
@@ -14,7 +14,8 @@ tests: $(OBJECTS)
 %.o: %.cc
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-run_tests: tests
+run_tests:
+	@make -B tests
 	@echo "*** Running tests ***"
 	@export LD_LIBRARY_PATH=./.. && ./tests
 
@@ -23,3 +24,4 @@ clean:
 	rm -f tests
 
 .PHONY: clean
+.PHONY: run_tests
