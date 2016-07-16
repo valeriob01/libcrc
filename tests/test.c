@@ -103,24 +103,20 @@ test_crc32_slow_output_inversion()
     return 0;
 }
 
+uint32_t 
+test_crc32_fast_returns_correct_value_for_ethernet(testcase* test)
+{
 
+    crc_params_t crc_params;
+    crc_params.type = CRC32;
+    crc_params.poly.poly_crc32 = 0x04C11DB7;
+    crc_params.crc_init.crc32 = 0xFFFFFFFF;
+    crc_params.flags = CRC_OUTPUT_REVERSAL | CRC_OUTPUT_INVERSION | CRC_INPUT_REVERSAL;
 
-//void 
-//compute_crc32_table() 
-//{
-//    uint8_t temp = 0;
-//   while(temp != 255)
-//    {
-//        if(temp % 4 == 0)
-//            printf("\n");
-//        
-//        printf("0x%.8x, ", crc32(&temp, 1));
-//        ++temp;
-//   }
-//    printf("0x%.8x, ", crc32(&temp, 1));
-//}
-
-
+    crc_t res = crc_fast(&crc_params, test->buffer, test->len);
+    _assert(res.crc32 == test->crc32);
+    return 0;
+}
 int
 main(int argc, char *argv[])
 {
@@ -143,11 +139,16 @@ main(int argc, char *argv[])
         .crc32 = 0x3e869219,
     };
     
+    /* Tests for slow CRC algorithm */
     test_crc32_slow_returns_correct_value_for_ethernet(&test1);
     test_crc32_slow_returns_correct_value_for_ethernet(&test2);
     test_crc32_slow_returns_correct_value_for_ethernet(&test3);
     test_crc32_slow_input_reversal();
     test_crc32_slow_output_reversal();
     test_crc32_slow_output_inversion();
+
+    /* Tests for CRC algorithm */
+    test_crc32_fast_returns_correct_value_for_ethernet(&test1);
+
     return 0;
 }

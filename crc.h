@@ -5,7 +5,7 @@
 #define CRC_OUTPUT_REVERSAL     (1 << 1)
 #define CRC_OUTPUT_INVERSION    (1 << 2)
 
-extern uint32_t crc32_table[];
+extern uint32_t crc32_table_outr_inr[];
 
 typedef enum 
 { 
@@ -39,6 +39,11 @@ typedef struct
 
 
 crc_t crc_slow(crc_params_t *crc_params, uint8_t *message, uint32_t msg_len);
-uint32_t crc32_fast(uint8_t *message, uint32_t msg_len);
+crc_t crc_fast(crc_params_t *crc_params, uint8_t *message, uint32_t msg_len);
+
 extern uint32_t crc32_table[];
+extern uint32_t crc32_table_outr_inr[];
+extern uint32_t crc32_table_outr[];
+extern uint32_t crc32_table_inr[];
+
 #endif
