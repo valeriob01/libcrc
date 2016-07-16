@@ -24,4 +24,3 @@ clean:
 	rm -f tests
 
 .PHONY: clean
-.PHONY: run_tests
