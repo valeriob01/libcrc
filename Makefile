@@ -8,6 +8,9 @@ all: libcrc.so
 libcrc.so: $(OBJECTS)
 	$(CC) $(OBJECTS) -o $@ $(LDLIBS) $(LDFLAGS) $(CFLAGS)
 
+exec: $(OBJECTS)
+	$(CC) $(OBJECTS) -o $@ $(LDLIBS) $(CFLAGS)
+
 %.o: %.cc
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 

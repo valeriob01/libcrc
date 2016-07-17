@@ -32,7 +32,7 @@ compute_crc32_table()
    crc_params.type = CRC32;
    crc_params.poly.poly_crc32 = 0x04C11DB7;
    crc_params.crc_init.crc32 = 0x00000000;
-   crc_params.flags = 0;
+   crc_params.flags = CRC_INPUT_REVERSAL;
   
    printf("uint32_t crc32_table[256] = {");
    while(temp != 255)
@@ -105,30 +105,39 @@ get_crc_table(crc_params_t *crc_params)
     assert(crc_params->type == CRC32);
 
     if(crc_params->type == CRC32) 
-    {
-        if(crc_params->flags & CRC_INPUT_REVERSAL &&
-           crc_params->flags & CRC_OUTPUT_REVERSAL)
-            return (void*)crc32_table_outr_inr;
-    }
+        return (void*)crc32_table;
 
     /* Not supported */
     assert(0);
     return NULL;
 }
+
+
 crc_t
 crc_fast(crc_params_t *crc_params, uint8_t *message, uint32_t msg_len)
 {
     crc_t crc_tmp; 
     uint32_t j;
+    void *t;
+
     /* Temporary CRC initialized according to crc_params */
     memcpy(&crc_tmp, &crc_params->crc_init, sizeof(crc_tmp));
-
-    for(j=0; j<msg_len; j++)
+    
+    if(crc_params->type == CRC32)
+        t = ((uint32_t*)get_crc_table(crc_params));
+   
+     for(j=0; j<msg_len; j++)
     {
         if(crc_params->type == CRC32)
         {
-            uint32_t* t = ((uint32_t*)get_crc_table(crc_params));
-            crc_tmp.crc32 = t[message[j] ^ (crc_tmp.crc32 & 0xFF)] ^ (crc_tmp.crc32 >> 8);
+            if(crc_params->flags & CRC_INPUT_REVERSAL)
+                crc_tmp.crc32 = 
+                ((uint32_t*)t)[reflect8(message[j]) ^ ((crc_tmp.crc32 >> 24) & 0xFF)] ^ 
+                                (crc_tmp.crc32 << 8);
+            else
+                crc_tmp.crc32 = 
+                ((uint32_t*)t)[message[j] ^ ((crc_tmp.crc32 >> 24) & 0xFF)] ^ 
+                                (crc_tmp.crc32 << 8);
         }
         else
         {
@@ -136,14 +145,21 @@ crc_fast(crc_params_t *crc_params, uint8_t *message, uint32_t msg_len)
             assert(0);
         }
     }
-    /*
-     * With the fast CRC implementation, do not consier the value of 
-     * CRC_OUTPUT_REVERSAL as it has already been accounted for with the
-     * CRC table. TODO: This deserves a better explanation
-     */
+    
+    if(crc_params->flags & CRC_OUTPUT_REVERSAL)
+        reverse(&crc_tmp, crc_params->type);
 
     if(crc_params->flags & CRC_OUTPUT_INVERSION)
         invert(&crc_tmp, crc_params->type);
 
     return crc_tmp;
+}
+
+
+int
+main()
+{
+    compute_crc32_table();
+    return 0;
+
 }

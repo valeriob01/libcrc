@@ -117,6 +117,64 @@ test_crc32_fast_returns_correct_value_for_ethernet(testcase* test)
     _assert(res.crc32 == test->crc32);
     return 0;
 }
+
+
+uint32_t
+test_crc32_fast_input_reversal()
+{
+    
+    char *message = "Nel mezzo del cammin di nostra vita";
+
+    crc_params_t crc_params;
+    crc_params.type = CRC32;
+    crc_params.poly.poly_crc32 = 0x04C11DB7;
+    crc_params.crc_init.crc32 = 0xFFFFFFFF;
+    crc_params.flags = CRC_INPUT_REVERSAL;
+    
+    crc_t res = crc_fast(&crc_params, (uint8_t*)message, strlen(message));
+    _assert(res.crc32 == 0xE02C2025);
+     
+    return 0;
+}
+
+
+uint32_t
+test_crc32_fast_output_reversal()
+{
+    
+    char *message = "Nel mezzo del cammin di nostra vita";
+
+    crc_params_t crc_params;
+    crc_params.type = CRC32;
+    crc_params.poly.poly_crc32 = 0x04C11DB7;
+    crc_params.crc_init.crc32 = 0xFFFFFFFF;
+    crc_params.flags = CRC_OUTPUT_REVERSAL;
+
+    crc_t res = crc_fast(&crc_params, (uint8_t*)message, strlen(message));
+    _assert(res.crc32 == 0xAEC3A757);
+
+    return 0;
+}
+
+
+uint32_t
+test_crc32_fast_output_inversion()
+{
+    
+    char *message = "Nel mezzo del cammin di nostra vita";
+
+    crc_params_t crc_params;
+    crc_params.type = CRC32;
+    crc_params.poly.poly_crc32 = 0x04C11DB7;
+    crc_params.crc_init.crc32 = 0xFFFFFFFF;
+    crc_params.flags = CRC_OUTPUT_INVERSION;
+
+    crc_t res = crc_fast(&crc_params, (uint8_t*)message, strlen(message));
+    _assert(res.crc32 == 0x151A3C8A);
+
+    return 0;
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -147,8 +205,13 @@ main(int argc, char *argv[])
     test_crc32_slow_output_reversal();
     test_crc32_slow_output_inversion();
 
-    /* Tests for CRC algorithm */
+    /* Tests for fast CRC algorithm */
     test_crc32_fast_returns_correct_value_for_ethernet(&test1);
+    test_crc32_fast_returns_correct_value_for_ethernet(&test2);
+    test_crc32_fast_returns_correct_value_for_ethernet(&test3);
+    test_crc32_fast_input_reversal();
+    test_crc32_fast_output_reversal(); 
+    test_crc32_fast_output_inversion();
 
     return 0;
 }

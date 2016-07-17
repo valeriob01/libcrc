@@ -38,8 +38,8 @@ reflect8(uint8_t in_byte)
     uint8_t i;
     for(i = 0; i < 8; i++ )
     {
-        temp = temp | ((in_byte & (0x80 >> i)) >> (8-2*i))
-                    | ((in_byte & (0x01 << i)) << (8-2*i));
+        temp = temp | ((in_byte & (0x80 >> i)) >> (7-2*i))
+                    | ((in_byte & (0x01 << i)) << (7-2*i));
     }
     return temp;
 }
