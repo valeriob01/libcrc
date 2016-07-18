@@ -1,5 +1,5 @@
 SOURCES := $(shell find . -name "*.c")
-BLOBS := $(shell find bin -name "*.o")
+BLOBS := $(shell find bin -name "*.bin")
 OBJECTS := $(SOURCES:.c=.o)
 
 CFLAGS = -Wall -O0 -D_GNU_SOURCE
@@ -8,7 +8,7 @@ LDFLAGS = -L..
 all: tests
 
 tests: $(OBJECTS)
-	make -C ..
+	make -C .. libcrc.so
 	$(CC) $(OBJECTS) $(BLOBS) -o $@ $(LDFLAGS) $(LDLIBS) $(CFLAGS)
 
 %.o: %.cc
