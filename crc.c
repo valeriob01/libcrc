@@ -15,39 +15,18 @@
  * Author: Marco Guerri <gmarco.dev@gmail.com>
  */
 
+#ifdef __KERNEL__
+#include <linux/string.h>
+#include <linux/types.h>
+#else
 #include <stdint.h>
-#include <assert.h>
 #include <string.h>
 #include <stdio.h>
+#include <assert.h>
+#endif
 
 #include "crc.h"
 #include "bit_manipulation.h"
-
-void 
-compute_crc32_table() 
-{
-   uint8_t temp = 0;
-
-   crc_params_t crc_params;
-   crc_params.type = CRC32;
-   crc_params.poly.poly_crc32 = 0x04C11DB7;
-   crc_params.crc_init.crc32 = 0x00000000;
-   crc_params.flags = CRC_INPUT_REVERSAL;
-  
-   printf("uint32_t crc32_table[256] = {");
-   while(temp != 255)
-   {
-       if(temp % 4 == 0)
-           printf("\n");
-       
-       crc_t res = crc_slow(&crc_params, &temp, 1);
-       printf("0x%.8x, ", res.crc32);
-       ++temp;
-   }
-   
-   crc_t res = crc_slow(&crc_params, &temp, 1);
-   printf("0x%.8x}; ", res.crc32);
-}
 
 /**
  *  Calculates CRC based con crc_params_t parameters using the "slow" algorithm
@@ -153,13 +132,4 @@ crc_fast(crc_params_t *crc_params, uint8_t *message, uint32_t msg_len)
         invert(&crc_tmp, crc_params->type);
 
     return crc_tmp;
-}
-
-
-int
-main()
-{
-    compute_crc32_table();
-    return 0;
-
 }

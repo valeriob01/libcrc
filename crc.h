@@ -5,6 +5,11 @@
 #define CRC_OUTPUT_REVERSAL     (1 << 1)
 #define CRC_OUTPUT_INVERSION    (1 << 2)
 
+#ifdef __KERNEL__
+#warning "Removing assertions"
+#define assert(expr) (void)0
+#endif
+
 extern uint32_t crc32_table_outr_inr[];
 
 typedef enum 
