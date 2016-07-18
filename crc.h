@@ -6,8 +6,8 @@
 #define CRC_OUTPUT_INVERSION    (1 << 2)
 
 #ifdef __KERNEL__
-#warning "Removing assertions"
 #define assert(expr) (void)0
+#define __assert_fail(expr) (void)0
 #endif
 
 extern uint32_t crc32_table_outr_inr[];
