@@ -15,7 +15,7 @@ libcrc.a: $(OBJECTS)
 	ar rcs $@ $^
 
 %.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(INCLUDES) -c $< -o $@
 
 run_tests:
 	make $@ -C tests
