@@ -16,7 +16,9 @@ tests: $(OBJECTS)
 
 run_tests:
 	@make -B tests
-	@echo "*** Running tests ***"
+	@echo "-----------------------------"
+	@echo  "------- Running tests -------"
+	@echo "-----------------------------"
 	@export LD_LIBRARY_PATH=./.. && ./tests
 
 clean:
