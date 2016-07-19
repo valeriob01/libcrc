@@ -18,6 +18,10 @@
 #include <stdint.h>
 #include "crc.h"
 
+#ifndef __KERNEL__
+#include <assert.h>
+#endif
+
 uint32_t 
 reflect32(uint32_t in_byte) 
 {
