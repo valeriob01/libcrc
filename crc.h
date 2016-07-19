@@ -1,14 +1,14 @@
 #ifndef __CRC_H__
 #define __CRC_H__
 
+#ifdef __KERNEL__
+//Should be BUG_ON in kernel space...
+#define assert(expr) ((void)0)
+#endif
+
 #define CRC_INPUT_REVERSAL      (1 << 0)
 #define CRC_OUTPUT_REVERSAL     (1 << 1)
 #define CRC_OUTPUT_INVERSION    (1 << 2)
-
-#ifdef __KERNEL__
-#define assert(expr) (void)0
-#define __assert_fail(expr) (void)0
-#endif
 
 extern uint32_t crc32_table_outr_inr[];
 

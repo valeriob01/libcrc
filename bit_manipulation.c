@@ -16,7 +16,7 @@
  */
 
 #include <stdint.h>
-#include <assert.h>
+#include "crc.h"
 
 uint32_t 
 reflect32(uint32_t in_byte) 
@@ -154,4 +154,5 @@ get_bit(void *payload, uint8_t bit_size, uint8_t bitno)
 
     /* Should not get here */
     assert(0);
+    return 0;
 }
