@@ -1,5 +1,8 @@
 SOURCES := $(shell find . -name "*.c")
+
 BLOBS := $(shell find bin -name "*.bin")
+BLOBS := $(BLOBS:.bin=.bin.o)
+
 OBJECTS := $(SOURCES:.c=.o)
 
 CFLAGS = -Wall -O0 -D_GNU_SOURCE
@@ -8,7 +11,11 @@ LDFLAGS = -L..
 all: tests
 
 tests: $(OBJECTS)
+ # Making the library
 	make -C .. libcrc.so
+	# Making the object files from binary blobs
+	make -C bin objects
+ # Compiling everything together
 	$(CC) $(OBJECTS) $(BLOBS) -o $@ $(LDFLAGS) $(LDLIBS) $(CFLAGS)
 
 %.o: %.cc
@@ -22,6 +29,7 @@ run_tests:
 	@export LD_LIBRARY_PATH=./.. && ./tests
 
 clean:
+	make -C bin $@
 	rm -f $(OBJECTS)
 	rm -f tests
 

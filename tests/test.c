@@ -21,9 +21,10 @@
 #include "test.h"
 #include "../crc.h"
 
-extern uint8_t *_binary_test1_start;
-extern uint8_t *_binary_test2_start;
-extern uint8_t *_binary_test3_start;
+extern uint8_t *_binary___test1_bin_start;
+extern uint8_t *_binary___test2_bin_start;
+extern uint8_t *_binary___test3_bin_start;
+extern uint8_t *_binary___test4_bin_start;
 
 typedef struct {
     uint8_t *buffer;
@@ -180,27 +181,34 @@ main(int argc, char *argv[])
 {
     /* Test cases for real ethernet payloads */
     testcase test1 = {
-        .buffer = (uint8_t*)&_binary_test1_start,
+        .buffer = (uint8_t*)&_binary___test1_bin_start,
         .len = 60,
         .crc32 = 0x11d056c3,
     };
     
     testcase test2 = {
-        .buffer = (uint8_t*)&_binary_test2_start,
+        .buffer = (uint8_t*)&_binary___test2_bin_start,
         .len = 60,
         .crc32 = 0xbb327374,
     };
    
     testcase test3 = {
-        .buffer = (uint8_t*)&_binary_test3_start,
+        .buffer = (uint8_t*)&_binary___test3_bin_start,
         .len = 60,
         .crc32 = 0x3e869219,
     };
     
+    testcase test4 = {
+        .buffer = (uint8_t*)&_binary___test4_bin_start,
+        .len = 60,
+        .crc32 = 0x5ffabb4f,
+    };
+
     /* Tests for slow CRC algorithm */
     test_crc32_slow_returns_correct_value_for_ethernet(&test1);
     test_crc32_slow_returns_correct_value_for_ethernet(&test2);
     test_crc32_slow_returns_correct_value_for_ethernet(&test3);
+    test_crc32_slow_returns_correct_value_for_ethernet(&test4);
     test_crc32_slow_input_reversal();
     test_crc32_slow_output_reversal();
     test_crc32_slow_output_inversion();
