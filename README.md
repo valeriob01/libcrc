@@ -1,4 +1,5 @@
-Library to calculate checksum with customizable input parameters
+### libcrc ###
+libcrc calculates checksum with customizable input parameters
 
 To compile the shared object:
     make
@@ -9,6 +10,7 @@ To run tests:
 ### License ###
 `libcrc` is licensed under the GPLv3 license.
 
+```
 libcrc - Library which calculates CRC checksums 
 
 Copyright (C) 2016 Marco Guerri <marco.guerri.dev@fastmail.com>
@@ -25,4 +27,5 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
+```
 
