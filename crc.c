@@ -105,24 +105,26 @@ crc_fast(crc_params_t *crc_params, uint8_t *message, uint32_t msg_len)
     if(crc_params->type == CRC32)
         t = ((uint32_t*)get_crc_table(crc_params));
    
-     for(j=0; j<msg_len; j++)
-    {
-        if(crc_params->type == CRC32)
-        {
+     if(crc_params->type == CRC32)
+     {
+         for(j=0; j<msg_len; j++)
+         {
             if(crc_params->flags & CRC_INPUT_REVERSAL)
                 crc_tmp.crc32 = 
-                ((uint32_t*)t)[reflect8(message[j]) ^ ((crc_tmp.crc32 >> 24) & 0xFF)] ^ 
-                                (crc_tmp.crc32 << 8);
+                    ((uint32_t*)t)[reflect8(message[j]) ^ 
+                    ((crc_tmp.crc32 >> 24) & 0xFF)] ^ 
+                    (crc_tmp.crc32 << 8);
             else
                 crc_tmp.crc32 = 
-                ((uint32_t*)t)[message[j] ^ ((crc_tmp.crc32 >> 24) & 0xFF)] ^ 
-                                (crc_tmp.crc32 << 8);
+                    ((uint32_t*)t)[message[j] ^ 
+                    ((crc_tmp.crc32 >> 24) & 0xFF)] ^ 
+                    (crc_tmp.crc32 << 8);
         }
-        else
-        {
-            /* Not supported */
-            assert(0);
-        }
+    } 
+    else 
+    {
+        /* Not supported for the moment */
+        assert(0);
     }
     
     if(crc_params->flags & CRC_OUTPUT_REVERSAL)

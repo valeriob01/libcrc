@@ -7,9 +7,10 @@ objects:
 showarch:
 	objdump -f /bin/sh
 
-
 clean:
 	rm $(OBJECTS)
+
+.PHONY: showarch
 
 
 
