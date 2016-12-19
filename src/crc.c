@@ -117,22 +117,24 @@ crc_fast(crc_params_t *crc_params, uint8_t *message, uint32_t msg_len)
                     uint8_t shift_right = (crc_tmp.crc32 >> 24) & 0xFF;
                     uint8_t reflect = reflect8(message[j]);
                     uint32_t shift_left = crc_tmp.crc32 << 8;
-                    /* The following formatting is quite ugly but it's the only 
-                     * way to clearly understand the order of the operations */
+                    
+                    /* The following code:
+                     * if(condition)
+                     *  res = B
+                     * else
+                     *  res = A
+                     * can be translated to a jumpless code as follows:
+                     * res = A ^ ((A^B) & -(condition)
+                     * If the hardware struggles with the branch prediction that
+                     * the if requires, this can actually improve performance. In
+                     * this case as a matter of fact the jumpless code is slower
+                     * (the condition resolves always to the same
+                     */
                     crc_tmp.crc32 = 
-                        (
-                            ((uint32_t*)t)[message[j] ^ shift_right] ^ shift_left 
-                        ) ^
-                        (
-                            (
-                                (
-                                    ((uint32_t*)t)[message[j] ^ shift_right] ^ shift_left
-                                ) ^ 
-                                ( 
-                                    ((uint32_t*)t)[reflect ^ shift_right] ^ shift_left 
-                                )
-                            ) & - (crc_params->flags & CRC_INPUT_REVERSAL)
-                        );
+                        (((uint32_t*)t)[message[j] ^ shift_right] ^ shift_left) ^
+                        (((((uint32_t*)t)[message[j] ^ shift_right] ^ shift_left) ^ 
+                           ((uint32_t*)t)[reflect ^ shift_right] ^ shift_left)) & 
+                          - (crc_params->flags & CRC_INPUT_REVERSAL));
                 #else
                     if(crc_params->flags & CRC_INPUT_REVERSAL)
                         crc_tmp.crc32 = 
