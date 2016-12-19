@@ -1,18 +1,20 @@
 /*
+ * libcrc - Library which calculates CRC checksums
+ *
+ * Copyright (C) 2016 Marco Guerri <marco.guerri.dev@fastmail.com>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
- * Author: Marco Guerri <gmarco.dev@gmail.com>
  */
 
 #include <stdint.h>
@@ -91,9 +93,9 @@ char reflect8_table[256] = {
     0x3f, 0xbf, 0x7f, 0xff
 };
 
-inline 
-uint32_t 
-reflect32(uint32_t in_byte) 
+inline
+uint32_t
+reflect32(uint32_t in_byte)
 {
     uint32_t temp = 0;
     uint32_t i;
@@ -105,8 +107,8 @@ reflect32(uint32_t in_byte)
     return temp;
 }
 
-inline 
-uint8_t 
+inline
+uint8_t
 reflect8(uint8_t in_byte)
 {
     return reflect8_table[in_byte];
@@ -119,10 +121,10 @@ void
 invert(void *payload, uint8_t bit_size)
 {
 
-    assert(bit_size == 8 || 
+    assert(bit_size == 8 ||
            bit_size == 32);
 
-    switch(bit_size) 
+    switch(bit_size)
     {
         case 8:
             *((uint8_t*)payload) = ~*((uint8_t*)payload);
@@ -135,13 +137,13 @@ invert(void *payload, uint8_t bit_size)
 
 
 /**
- * Reverses a payload of variable size 
+ * Reverses a payload of variable size
  */
 void
 reverse(void *payload, uint8_t bit_size)
 {
     /* Not yet implemented for 16 bits */
-    assert(bit_size == 8 || 
+    assert(bit_size == 8 ||
            bit_size == 32);
 
     switch(bit_size)
@@ -156,10 +158,10 @@ reverse(void *payload, uint8_t bit_size)
 }
 
 
-/** 
- * Shift left a payload of variable size 
+/**
+ * Shift left a payload of variable size
  */
-void 
+void
 shift_left(void *payload, uint8_t bit_size, uint32_t shift_len)
 {
     assert(shift_len <= bit_size);
@@ -202,9 +204,9 @@ xor(void *payload, void *mask, uint8_t bit_size)
 }
 
 /**
- *  Returns the value of a single bit, bitno is 0-indexed 
- */ 
-uint8_t 
+ *  Returns the value of a single bit, bitno is 0-indexed
+ */
+uint8_t
 get_bit(void *payload, uint8_t bit_size, uint8_t bitno)
 {
     assert(bitno < bit_size);

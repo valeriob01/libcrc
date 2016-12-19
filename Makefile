@@ -1,28 +1,33 @@
-SOURCES := $(shell find . -path ./tests  -prune -o -name "*.c" -print)
-OBJECTS := $(SOURCES:.c=.o)
+SOURCES := $(shell find . -path ./src/tests -prune -o -name "*.c" -print)
+SOURCES_TESTS := $(shell find ./src/tests -name "*.c" -print)
 
-CFLAGS = -Wall -O0 -D_GNU_SOURCE
+OBJECTS := $(SOURCES:.c=.o)
+OBJECTS_TESTS := $(SOURCES_TESTS:.c=.o)
+
+CFLAGS = -Wall -O0 -fPIC -D_GNU_SOURCE -Isrc -Isrc/tests -g
+LDFLAGS = -shared
+LDFLAGS_TESTS = -Lbin
+LDLIBS_TESTS = -lcrc
+
 all: libcrc.so
 
-# Compile for Position Independent Code only if shared library
-libcrc.so: CFLAGS += -fPIC
-libcrc.so: LDFLAGS += -shared
-
 libcrc.so: $(OBJECTS)
-	$(CC) $(OBJECTS) -o $@ $(LDLIBS) $(LDFLAGS) $(CFLAGS)
+	@install -d bin -m 755
+	$(CC) $(OBJECTS) -o bin/$@ $(LDLIBS) $(LDFLAGS) $(CFLAGS)
 
-libcrc.a: $(OBJECTS)
-	ar rcs $@ $^
+%.o: %.cc
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-%.o: %.c
-	$(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(INCLUDES) -c $< -o $@
+tests: libcrc.so
+	make -C src/tests
 
-run_tests:
-	make $@ -C tests
+run_tests: tests
+	@export LD_LIBRARY_PATH=bin && ./src/tests/tests
+
 
 clean:
-	make -C tests $@
 	rm -f $(OBJECTS)
-	rm -f libcrc.so
+	rm -f bin/*
+	make -C src/tests clean
 
 .PHONY: clean

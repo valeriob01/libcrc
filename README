@@ -1,7 +1,0 @@
-Library to calculate checksum with customizable input params
-
-To compile the shared object:
-    make
-
-To run tests:
-    make run_tests
