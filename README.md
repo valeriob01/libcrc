@@ -1,11 +1,15 @@
 ### libcrc ###
-libcrc calculates checksum with customizable input parameters
+`libcrc` calculates checksums with customizable input parameters
 
 To compile the shared object:
+```
     make
+```
 
 To run tests:
+```
     make run_tests
+```
 
 ### License ###
 `libcrc` is licensed under the GPLv3 license.
