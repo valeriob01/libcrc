@@ -23,7 +23,7 @@ BLOBS := $(BLOBS:.bin=.bin.o)
 OBJECTS := $(SOURCES:.c=.o)
 
 CFLAGS = -Wall -O0 -D_GNU_SOURCE
-LDLIBS = -lcrc
+LDLIBS = -lcrc -lrt
 LDFLAGS = -L../../bin
 all: tests
 
